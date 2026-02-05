@@ -1,0 +1,75 @@
+// Prisma schema for Loop Music Streaming App
+// Connected to Supabase PostgreSQL
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Artist {
+  id          String   @id @default(uuid())
+  name        String
+  profile_url String?
+  created_at  DateTime @default(now())
+
+  // Relations
+  albums AlbumArtist[]
+  tracks TrackArtist[]
+
+  @@map("artists")
+}
+
+model Album {
+  id         String   @id @default(uuid())
+  title      String
+  cover_url  String?
+  created_at DateTime @default(now())
+
+  // Relations
+  tracks  Track[]
+  artists AlbumArtist[]
+
+  @@map("albums")
+}
+
+model Track {
+  id         String   @id @default(uuid())
+  title      String
+  cover_url  String?
+  track_url  String?
+  duration   Int      @default(0)
+  album_id   String?
+  created_at DateTime @default(now())
+
+  // Relations
+  album   Album?        @relation(fields: [album_id], references: [id], onDelete: SetNull)
+  artists TrackArtist[]
+
+  @@map("tracks")
+}
+
+model AlbumArtist {
+  album_id  String
+  artist_id String
+
+  album  Album  @relation(fields: [album_id], references: [id], onDelete: Cascade)
+  artist Artist @relation(fields: [artist_id], references: [id], onDelete: Cascade)
+
+  @@id([album_id, artist_id])
+  @@map("album_artists")
+}
+
+model TrackArtist {
+  track_id  String
+  artist_id String
+
+  track  Track  @relation(fields: [track_id], references: [id], onDelete: Cascade)
+  artist Artist @relation(fields: [artist_id], references: [id], onDelete: Cascade)
+
+  @@id([track_id, artist_id])
+  @@map("track_artists")
+}
