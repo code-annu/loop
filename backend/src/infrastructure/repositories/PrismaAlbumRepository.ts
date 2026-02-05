@@ -40,11 +40,11 @@ export class PrismaAlbumRepository implements IAlbumRepository {
 
   async findRandom(limit: number): Promise<Album[]> {
     // Get random album IDs using raw query
-    const randomIds = await this.db.$queryRaw<Array<{ id: string }>>`
-      SELECT id FROM albums 
-      ORDER BY RANDOM() 
-      LIMIT ${limit}
-    `;
+    // Using $queryRawUnsafe to avoid prepared statement issues with PgBouncer
+    const randomIds = await this.db.$queryRawUnsafe<Array<{ id: string }>>(
+      `SELECT id FROM albums ORDER BY RANDOM() LIMIT $1`,
+      limit,
+    );
 
     if (randomIds.length === 0) {
       return [];

@@ -33,18 +33,15 @@ export class PrismaArtistRepository implements IArtistRepository {
 
   async findRandom(limit: number): Promise<Artist[]> {
     // PostgreSQL random ordering
-    const artists = await this.db.$queryRaw<
+    // Using $queryRawUnsafe to avoid prepared statement issues with PgBouncer
+    const artists = await this.db.$queryRawUnsafe<
       Array<{
         id: string;
         name: string;
         profile_url: string | null;
         created_at: Date;
       }>
-    >`
-      SELECT * FROM artists 
-      ORDER BY RANDOM() 
-      LIMIT ${limit}
-    `;
+    >(`SELECT * FROM artists ORDER BY RANDOM() LIMIT $1`, limit);
 
     return artists.map((artist) => mapPrismaArtistToEntity(artist as any));
   }
