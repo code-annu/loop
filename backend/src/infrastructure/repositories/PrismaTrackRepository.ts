@@ -38,11 +38,11 @@ export class PrismaTrackRepository implements ITrackRepository {
 
   async findRandom(limit: number): Promise<Track[]> {
     // Get random track IDs using raw query
-    // Using $queryRawUnsafe to avoid prepared statement issues with PgBouncer
-    const randomIds = await this.db.$queryRawUnsafe<Array<{ id: string }>>(
-      `SELECT id FROM tracks ORDER BY RANDOM() LIMIT $1`,
-      limit,
-    );
+    const randomIds = await this.db.$queryRaw<Array<{ id: string }>>`
+      SELECT id FROM tracks 
+      ORDER BY RANDOM() 
+      LIMIT ${limit}
+    `;
 
     if (randomIds.length === 0) {
       return [];
