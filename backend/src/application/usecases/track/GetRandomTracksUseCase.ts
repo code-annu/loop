@@ -11,7 +11,7 @@ import {
  */
 @injectable()
 export class GetRandomTracksUseCase {
-  private readonly DEFAULT_LIMIT = 10;
+  private readonly DEFAULT_LIMIT = 15;
 
   constructor(
     @inject(TYPES.TrackRepository)

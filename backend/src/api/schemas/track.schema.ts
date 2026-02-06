@@ -18,6 +18,19 @@ export const randomTracksQuerySchema = z.object({
     .pipe(z.number().min(1).max(50).optional()),
 });
 
+/**
+ * Search tracks query schema
+ */
+export const searchTracksQuerySchema = z.object({
+  q: z.string().min(1, "Search query cannot be empty"),
+  limit: z
+    .string()
+    .optional()
+    .transform((val) => (val ? parseInt(val, 10) : undefined))
+    .pipe(z.number().min(1).max(50).optional()),
+});
+
 // Type exports
 export type TrackIdParam = z.infer<typeof trackIdParamSchema>;
 export type RandomTracksQuery = z.infer<typeof randomTracksQuerySchema>;
+export type SearchTracksQuery = z.infer<typeof searchTracksQuerySchema>;

@@ -10,10 +10,12 @@ export const TYPES = {
   // Use Cases - Track
   GetTrackByIdUseCase: Symbol.for("GetTrackByIdUseCase"),
   GetRandomTracksUseCase: Symbol.for("GetRandomTracksUseCase"),
+  SearchTracksUseCase: Symbol.for("SearchTracksUseCase"),
 
   // Use Cases - Album
   GetAlbumByIdUseCase: Symbol.for("GetAlbumByIdUseCase"),
   GetRandomAlbumsUseCase: Symbol.for("GetRandomAlbumsUseCase"),
+  SearchAlbumsUseCase: Symbol.for("SearchAlbumsUseCase"),
 
   // Use Cases - Artist
   GetArtistByIdUseCase: Symbol.for("GetArtistByIdUseCase"),

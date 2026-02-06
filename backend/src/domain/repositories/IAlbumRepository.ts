@@ -24,4 +24,5 @@ export interface IAlbumRepository {
    * @returns Array of all album entities
    */
   findAll(): Promise<Album[]>;
+  search(query: string, limit: number): Promise<Album[]>;
 }

@@ -4,9 +4,14 @@ import { TYPES } from "../../di/types";
 import {
   GetAlbumByIdUseCase,
   GetRandomAlbumsUseCase,
+  SearchAlbumsUseCase,
 } from "../../application/usecases/album";
 import { successResponse } from "../responses";
-import { albumIdParamSchema, randomAlbumsQuerySchema } from "../schemas";
+import {
+  albumIdParamSchema,
+  randomAlbumsQuerySchema,
+  searchAlbumsQuerySchema,
+} from "../schemas";
 import { ValidationError } from "../../domain/errors";
 
 /**
@@ -20,6 +25,8 @@ export class AlbumController {
     private readonly getAlbumByIdUseCase: GetAlbumByIdUseCase,
     @inject(TYPES.GetRandomAlbumsUseCase)
     private readonly getRandomAlbumsUseCase: GetRandomAlbumsUseCase,
+    @inject(TYPES.SearchAlbumsUseCase)
+    private readonly searchAlbumsUseCase: SearchAlbumsUseCase,
   ) {}
 
   /**
@@ -67,6 +74,28 @@ export class AlbumController {
         limit: parseResult.data.limit,
       });
       res.status(200).json(successResponse(result.albums));
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * GET /albums/search
+   * Search albums
+   */
+  async search(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const parseResult = searchAlbumsQuerySchema.safeParse(req.query);
+
+      if (!parseResult.success) {
+        throw new ValidationError(parseResult.error.errors[0].message);
+      }
+
+      const albums = await this.searchAlbumsUseCase.execute(
+        parseResult.data.q,
+        parseResult.data.limit,
+      );
+      res.status(200).json(successResponse(albums));
     } catch (error) {
       next(error);
     }

@@ -31,4 +31,12 @@ export interface ITrackRepository {
    * @returns Array of track entities
    */
   findByAlbumId(albumId: string): Promise<Track[]>;
+
+  /**
+   * Search for tracks by query
+   * @param query - Search query string
+   * @param limit - Maximum number of tracks to return
+   * @returns Array of track entities
+   */
+  search(query: string, limit: number): Promise<Track[]>;
 }

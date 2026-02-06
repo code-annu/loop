@@ -98,4 +98,26 @@ export class PrismaTrackRepository implements ITrackRepository {
 
     return mapPrismaTracksToEntities(tracks);
   }
+
+  async search(query: string, limit: number): Promise<Track[]> {
+    const tracks = await this.db.track.findMany({
+      where: {
+        title: {
+          contains: query,
+          mode: "insensitive",
+        },
+      },
+      take: limit,
+      include: {
+        album: true,
+        artists: {
+          include: {
+            artist: true,
+          },
+        },
+      },
+    });
+
+    return mapPrismaTracksToEntities(tracks);
+  }
 }

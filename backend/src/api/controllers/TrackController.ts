@@ -4,9 +4,14 @@ import { TYPES } from "../../di/types";
 import {
   GetTrackByIdUseCase,
   GetRandomTracksUseCase,
+  SearchTracksUseCase,
 } from "../../application/usecases/track";
 import { successResponse } from "../responses";
-import { trackIdParamSchema, randomTracksQuerySchema } from "../schemas";
+import {
+  trackIdParamSchema,
+  randomTracksQuerySchema,
+  searchTracksQuerySchema,
+} from "../schemas";
 import { ValidationError } from "../../domain/errors";
 
 /**
@@ -20,6 +25,8 @@ export class TrackController {
     private readonly getTrackByIdUseCase: GetTrackByIdUseCase,
     @inject(TYPES.GetRandomTracksUseCase)
     private readonly getRandomTracksUseCase: GetRandomTracksUseCase,
+    @inject(TYPES.SearchTracksUseCase)
+    private readonly searchTracksUseCase: SearchTracksUseCase,
   ) {}
 
   /**
@@ -67,6 +74,28 @@ export class TrackController {
         limit: parseResult.data.limit,
       });
       res.status(200).json(successResponse(result.tracks));
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * GET /tracks/search
+   * Search tracks
+   */
+  async search(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const parseResult = searchTracksQuerySchema.safeParse(req.query);
+
+      if (!parseResult.success) {
+        throw new ValidationError(parseResult.error.errors[0].message);
+      }
+
+      const tracks = await this.searchTracksUseCase.execute(
+        parseResult.data.q,
+        parseResult.data.limit,
+      );
+      res.status(200).json(successResponse(tracks));
     } catch (error) {
       next(error);
     }

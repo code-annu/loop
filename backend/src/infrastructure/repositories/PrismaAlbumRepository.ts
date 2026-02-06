@@ -85,4 +85,26 @@ export class PrismaAlbumRepository implements IAlbumRepository {
 
     return mapPrismaAlbumsToEntities(albums);
   }
+
+  async search(query: string, limit: number): Promise<Album[]> {
+    const albums = await this.db.album.findMany({
+      where: {
+        title: {
+          contains: query,
+          mode: "insensitive",
+        },
+      },
+      take: limit,
+      include: {
+        tracks: true,
+        artists: {
+          include: {
+            artist: true,
+          },
+        },
+      },
+    });
+
+    return mapPrismaAlbumsToEntities(albums);
+  }
 }

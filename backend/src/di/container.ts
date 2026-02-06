@@ -21,10 +21,12 @@ import {
 import {
   GetTrackByIdUseCase,
   GetRandomTracksUseCase,
+  SearchTracksUseCase,
 } from "../application/usecases/track";
 import {
   GetAlbumByIdUseCase,
   GetRandomAlbumsUseCase,
+  SearchAlbumsUseCase,
 } from "../application/usecases/album";
 import {
   GetArtistByIdUseCase,
@@ -65,6 +67,10 @@ function createContainer(): Container {
     .bind<GetRandomTracksUseCase>(TYPES.GetRandomTracksUseCase)
     .to(GetRandomTracksUseCase)
     .inSingletonScope();
+  container
+    .bind<SearchTracksUseCase>(TYPES.SearchTracksUseCase)
+    .to(SearchTracksUseCase)
+    .inSingletonScope();
 
   // Bind Album Use Cases
   container
@@ -74,6 +80,10 @@ function createContainer(): Container {
   container
     .bind<GetRandomAlbumsUseCase>(TYPES.GetRandomAlbumsUseCase)
     .to(GetRandomAlbumsUseCase)
+    .inSingletonScope();
+  container
+    .bind<SearchAlbumsUseCase>(TYPES.SearchAlbumsUseCase)
+    .to(SearchAlbumsUseCase)
     .inSingletonScope();
 
   // Bind Artist Use Cases
