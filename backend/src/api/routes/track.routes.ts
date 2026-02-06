@@ -14,6 +14,14 @@ router.get("/random", (req, res, next) =>
 );
 
 /**
+ * GET /tracks/search
+ * Search tracks
+ */
+router.get("/search", (req, res, next) =>
+  trackController.search(req, res, next),
+);
+
+/**
  * GET /tracks/:id
  * Get a single track by ID
  */

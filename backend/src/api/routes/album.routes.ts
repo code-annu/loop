@@ -14,6 +14,14 @@ router.get("/random", (req, res, next) =>
 );
 
 /**
+ * GET /albums/search
+ * Search albums
+ */
+router.get("/search", (req, res, next) =>
+  albumController.search(req, res, next),
+);
+
+/**
  * GET /albums/:id
  * Get a single album by ID
  */
