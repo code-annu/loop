@@ -10,11 +10,13 @@ class ApiEndpoints {
   static const String tracks = '/tracks';
   static String trackById(String id) => '/tracks/$id';
   static const String randomTracks = '/tracks/random';
+  static const String searchTracks = '/tracks/search';
 
   // Albums
   static const String albums = '/albums';
   static String albumById(String id) => '/albums/$id';
   static const String randomAlbums = '/albums/random';
+  static const String searchAlbums = '/albums/search';
 
   // Artists
   static const String artists = '/artists';
