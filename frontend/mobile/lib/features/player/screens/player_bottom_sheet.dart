@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/services.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_text_styles.dart';
@@ -25,38 +26,48 @@ class PlayerBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<PlayerBloc, PlayerState>(
       builder: (context, state) {
-        return AnimatedContainer(
-          duration: const Duration(milliseconds: 500),
-          height: MediaQuery.of(context).size.height,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                state.dominantColor ?? const Color(0xFF1E3A5F),
-                AppColors.background,
-              ],
-            ),
+        return AnnotatedRegion<SystemUiOverlayStyle>(
+          value: const SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness: Brightness.light,
           ),
-          child: Column(
-            children: [
-              // Top bar
-              SizedBox(height: MediaQuery.of(context).viewPadding.top),
-              _buildTopBar(context, state),
-              const Spacer(),
-              // Cover image
-              _buildCoverImage(state),
-              const Spacer(),
-              // Track info
-              _buildTrackInfo(state),
-              const SizedBox(height: 24),
-              // Seekbar
-              _buildSeekbar(context, state),
-              const SizedBox(height: 24),
-              // Controls
-              _buildControls(context, state),
-              const SizedBox(height: 48),
-            ],
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 500),
+            height: MediaQuery.of(context).size.height,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  state.dominantColor ?? const Color(0xFF1E3A5F),
+                  AppColors.background,
+                ],
+              ),
+            ),
+            child: SafeArea(
+              minimum: const EdgeInsets.only(top: 16),
+              child: Column(
+                children: [
+                  // Top bar
+                  _buildTopBar(context, state),
+                  const Spacer(),
+                  // Cover image
+                  _buildCoverImage(state),
+                  const Spacer(),
+                  // Track info
+                  _buildTrackInfo(state),
+                  const SizedBox(height: 24),
+                  // Seekbar
+                  _buildSeekbar(context, state),
+                  const SizedBox(height: 24),
+                  // Controls
+                  _buildControls(context, state),
+                  const SizedBox(
+                    height: 24,
+                  ), // Reduced bottom margin since SafeArea handles bottom
+                ],
+              ),
+            ),
           ),
         );
       },
