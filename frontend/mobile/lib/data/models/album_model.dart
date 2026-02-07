@@ -9,10 +9,7 @@ class AlbumInfoModel {
   final String id;
   final String title;
 
-  const AlbumInfoModel({
-    required this.id,
-    required this.title,
-  });
+  const AlbumInfoModel({required this.id, required this.title});
 
   factory AlbumInfoModel.fromJson(Map<String, dynamic> json) =>
       _$AlbumInfoModelFromJson(json);
@@ -25,9 +22,9 @@ class AlbumInfoModel {
 class TrackInfoModel {
   final String id;
   final String title;
-  @JsonKey(name: 'cover_url')
+  @JsonKey(name: 'coverUrl', readValue: _readCoverUrl)
   final String? coverUrl;
-  @JsonKey(name: 'track_url')
+  @JsonKey(name: 'trackUrl', readValue: _readTrackUrl)
   final String? trackUrl;
   final int duration;
 
@@ -50,7 +47,7 @@ class TrackInfoModel {
 class AlbumModel {
   final String id;
   final String title;
-  @JsonKey(name: 'cover_url')
+  @JsonKey(name: 'coverUrl', readValue: _readCoverUrl)
   final String? coverUrl;
   final List<TrackInfoModel> tracks;
   final List<ArtistModel> artists;
@@ -69,6 +66,13 @@ class AlbumModel {
   Map<String, dynamic> toJson() => _$AlbumModelToJson(this);
 
   /// Get artist names as a comma-separated string
-  String get artistNames =>
-      artists.map((a) => a.name).join(', ');
+  String get artistNames => artists.map((a) => a.name).join(', ');
+}
+
+Object? _readCoverUrl(Map<dynamic, dynamic> json, String key) {
+  return json['coverUrl'] ?? json['cover_url'];
+}
+
+Object? _readTrackUrl(Map<dynamic, dynamic> json, String key) {
+  return json['trackUrl'] ?? json['track_url'];
 }

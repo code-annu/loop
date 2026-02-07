@@ -7,10 +7,10 @@ part of 'artist_model.dart';
 // **************************************************************************
 
 ArtistModel _$ArtistModelFromJson(Map<String, dynamic> json) => ArtistModel(
-      id: json['id'] as String,
-      name: json['name'] as String,
-      profileUrl: json['profile_url'] as String?,
-    );
+  id: json['id'] as String,
+  name: json['name'] as String,
+  profileUrl: json['profile_url'] as String?,
+);
 
 Map<String, dynamic> _$ArtistModelToJson(ArtistModel instance) =>
     <String, dynamic>{

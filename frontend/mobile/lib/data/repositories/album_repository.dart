@@ -9,7 +9,7 @@ class AlbumRepository {
   final ApiClient _apiClient;
 
   AlbumRepository({ApiClient? apiClient})
-      : _apiClient = apiClient ?? ApiClient.instance;
+    : _apiClient = apiClient ?? ApiClient.instance;
 
   /// Get random albums
   Future<List<AlbumModel>> getRandomAlbums({int limit = 10}) async {
@@ -42,6 +42,27 @@ class AlbumRepository {
         return AlbumModel.fromJson(data['data'] as Map<String, dynamic>);
       }
       throw ServerException('Failed to fetch album');
+    } on DioException catch (e) {
+      throw _handleDioError(e);
+    }
+  }
+
+  /// Search albums
+  Future<List<AlbumModel>> searchAlbums(String query, {int limit = 20}) async {
+    try {
+      final response = await _apiClient.get(
+        ApiEndpoints.searchAlbums,
+        queryParameters: {'q': query, 'limit': limit.toString()},
+      );
+
+      final data = response.data as Map<String, dynamic>;
+      if (data['status'] == 'success') {
+        final List<dynamic> albumsJson = data['data'] as List<dynamic>;
+        return albumsJson
+            .map((json) => AlbumModel.fromJson(json as Map<String, dynamic>))
+            .toList();
+      }
+      throw ServerException('Failed to search albums');
     } on DioException catch (e) {
       throw _handleDioError(e);
     }

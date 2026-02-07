@@ -9,14 +9,14 @@ class TrackRepository {
   final ApiClient _apiClient;
 
   TrackRepository({ApiClient? apiClient})
-      : _apiClient = apiClient ?? ApiClient.instance;
+    : _apiClient = apiClient ?? ApiClient.instance;
 
   /// Get random tracks
-  Future<List<TrackModel>> getRandomTracks({int limit = 10}) async {
+  Future<List<TrackModel>> getRandomTracks({int limit = 15}) async {
     try {
       final response = await _apiClient.get(
         ApiEndpoints.randomTracks,
-        queryParameters: {'limit': limit.toString()},
+        queryParameters: {'limit': 15.toString()},
       );
 
       final data = response.data as Map<String, dynamic>;
@@ -42,6 +42,27 @@ class TrackRepository {
         return TrackModel.fromJson(data['data'] as Map<String, dynamic>);
       }
       throw ServerException('Failed to fetch track');
+    } on DioException catch (e) {
+      throw _handleDioError(e);
+    }
+  }
+
+  /// Search tracks
+  Future<List<TrackModel>> searchTracks(String query, {int limit = 20}) async {
+    try {
+      final response = await _apiClient.get(
+        ApiEndpoints.searchTracks,
+        queryParameters: {'q': query, 'limit': limit.toString()},
+      );
+
+      final data = response.data as Map<String, dynamic>;
+      if (data['status'] == 'success') {
+        final List<dynamic> tracksJson = data['data'] as List<dynamic>;
+        return tracksJson
+            .map((json) => TrackModel.fromJson(json as Map<String, dynamic>))
+            .toList();
+      }
+      throw ServerException('Failed to search tracks');
     } on DioException catch (e) {
       throw _handleDioError(e);
     }

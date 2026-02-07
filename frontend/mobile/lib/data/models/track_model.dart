@@ -9,9 +9,9 @@ part 'track_model.g.dart';
 class TrackModel {
   final String id;
   final String title;
-  @JsonKey(name: 'cover_url')
+  @JsonKey(name: 'coverUrl', readValue: _readCoverUrl)
   final String? coverUrl;
-  @JsonKey(name: 'track_url')
+  @JsonKey(name: 'trackUrl', readValue: _readTrackUrl)
   final String? trackUrl;
   final int duration;
   final AlbumInfoModel? album;
@@ -33,8 +33,7 @@ class TrackModel {
   Map<String, dynamic> toJson() => _$TrackModelToJson(this);
 
   /// Get artist names as a comma-separated string
-  String get artistNames =>
-      artists.map((a) => a.name).join(', ');
+  String get artistNames => artists.map((a) => a.name).join(', ');
 
   /// Get formatted duration (MM:SS)
   String get formattedDuration {
@@ -42,4 +41,12 @@ class TrackModel {
     final seconds = duration % 60;
     return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
   }
+}
+
+Object? _readCoverUrl(Map<dynamic, dynamic> json, String key) {
+  return json['coverUrl'] ?? json['cover_url'];
+}
+
+Object? _readTrackUrl(Map<dynamic, dynamic> json, String key) {
+  return json['trackUrl'] ?? json['track_url'];
 }
