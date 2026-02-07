@@ -14,12 +14,14 @@ class AppColors {
   static const Color background = Color(0xFF121212);
   static const Color surface = Color(0xFF1E1E1E);
   static const Color surfaceVariant = Color(0xFF282828);
+  static const Color surfaceContainerHighest = Color(0xFF333333);
   static const Color card = Color(0xFF181818);
 
   // Text Colors
   static const Color onBackground = Color(0xFFFFFFFF);
   static const Color onSurface = Color(0xFFFFFFFF);
   static const Color onSurfaceSecondary = Color(0xFFB3B3B3);
+  static const Color onSurfaceVariant = Color(0xFFCAC4D0);
   static const Color textSubtle = Color(0xFF727272);
 
   // Status Colors
