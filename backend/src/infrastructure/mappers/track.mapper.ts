@@ -36,7 +36,7 @@ export function mapPrismaTrackToEntity(
   return TrackEntity.create({
     id: prismaTrack.id,
     title: prismaTrack.title,
-    coverUrl: prismaTrack.cover_url,
+    coverUrl: prismaTrack.cover_url || prismaTrack.album?.cover_url || null,
     trackUrl: prismaTrack.track_url,
     duration: prismaTrack.duration,
     album,

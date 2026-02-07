@@ -25,7 +25,7 @@ export function mapPrismaAlbumToEntity(
   const tracks: Track[] = (prismaAlbum.tracks || []).map((track) => ({
     id: track.id,
     title: track.title,
-    coverUrl: track.cover_url,
+    coverUrl: track.cover_url || prismaAlbum.cover_url,
     trackUrl: track.track_url,
     duration: track.duration,
   }));
