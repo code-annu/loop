@@ -2,17 +2,19 @@ import 'package:flutter/material.dart';
 import '../../../data/models/models.dart';
 import '../../../core/constants/app_text_styles.dart';
 import '../../../core/constants/app_colors.dart';
-import 'single_track_view.dart';
+import 'quick_pick_track_item.dart';
 
 /// Section Header Widget
 class SectionHeader extends StatelessWidget {
   final String title;
   final VoidCallback? onSeeAll;
+  final String? actionLabel;
 
   const SectionHeader({
     super.key,
     required this.title,
     this.onSeeAll,
+    this.actionLabel,
   });
 
   @override
@@ -22,15 +24,12 @@ class SectionHeader extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            title,
-            style: AppTextStyles.headlineSmall,
-          ),
+          Text(title, style: AppTextStyles.headlineSmall),
           if (onSeeAll != null)
             TextButton(
               onPressed: onSeeAll,
               child: Text(
-                'See All',
+                actionLabel ?? 'See All',
                 style: AppTextStyles.labelMedium.copyWith(
                   color: AppColors.primary,
                 ),
@@ -42,15 +41,19 @@ class SectionHeader extends StatelessWidget {
   }
 }
 
-/// Quick Picks Section with PageView
+/// Quick Picks Section with horizontal scrolling grid (4 rows)
 class QuickPicksSection extends StatelessWidget {
   final List<TrackModel> tracks;
   final Function(TrackModel)? onTrackTap;
+  final VoidCallback? onPlayAll;
+  final Function(TrackModel)? onMenuTap;
 
   const QuickPicksSection({
     super.key,
     required this.tracks,
     this.onTrackTap,
+    this.onPlayAll,
+    this.onMenuTap,
   });
 
   @override
@@ -59,19 +62,35 @@ class QuickPicksSection extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
+    // Calculate item height for 4 rows
+    const double itemHeight = 72;
+    const double gridHeight = itemHeight * 4;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SectionHeader(title: 'Quick Picks'),
+        SectionHeader(
+          title: 'Quick picks',
+          onSeeAll: onPlayAll,
+          actionLabel: 'Play all',
+        ),
         SizedBox(
-          height: 220,
-          child: PageView.builder(
-            controller: PageController(viewportFraction: 0.45),
+          height: gridHeight,
+          child: GridView.builder(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 4,
+              mainAxisSpacing: 0,
+              crossAxisSpacing: 0,
+              childAspectRatio: 0.22, // height / width ratio for list items
+            ),
             itemCount: tracks.length,
             itemBuilder: (context, index) {
-              return SingleTrackView(
+              return QuickPickTrackItem(
                 track: tracks[index],
                 onTap: () => onTrackTap?.call(tracks[index]),
+                onMenuTap: () => onMenuTap?.call(tracks[index]),
               );
             },
           ),
@@ -81,15 +100,19 @@ class QuickPicksSection extends StatelessWidget {
   }
 }
 
-/// Random Picks Section with PageView
+/// Random Picks Section with horizontal scrolling grid (4 rows)
 class RandomPicksSection extends StatelessWidget {
   final List<TrackModel> tracks;
   final Function(TrackModel)? onTrackTap;
+  final VoidCallback? onPlayAll;
+  final Function(TrackModel)? onMenuTap;
 
   const RandomPicksSection({
     super.key,
     required this.tracks,
     this.onTrackTap,
+    this.onPlayAll,
+    this.onMenuTap,
   });
 
   @override
@@ -98,19 +121,35 @@ class RandomPicksSection extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
+    // Calculate item height for 4 rows
+    const double itemHeight = 72;
+    const double gridHeight = itemHeight * 4;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SectionHeader(title: 'Random Picks'),
+        SectionHeader(
+          title: 'Random picks',
+          onSeeAll: onPlayAll,
+          actionLabel: 'Play all',
+        ),
         SizedBox(
-          height: 220,
-          child: PageView.builder(
-            controller: PageController(viewportFraction: 0.45),
+          height: gridHeight,
+          child: GridView.builder(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 4,
+              mainAxisSpacing: 0,
+              crossAxisSpacing: 0,
+              childAspectRatio: 0.22, // height / width ratio for list items
+            ),
             itemCount: tracks.length,
             itemBuilder: (context, index) {
-              return SingleTrackView(
+              return QuickPickTrackItem(
                 track: tracks[index],
                 onTap: () => onTrackTap?.call(tracks[index]),
+                onMenuTap: () => onMenuTap?.call(tracks[index]),
               );
             },
           ),

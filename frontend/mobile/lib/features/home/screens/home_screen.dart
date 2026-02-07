@@ -7,6 +7,10 @@ import '../widgets/home_sections.dart';
 import '../widgets/new_albums_section.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_text_styles.dart';
+import '../../player/bloc/player_bloc.dart';
+import '../../player/bloc/player_event.dart';
+import '../../../data/models/models.dart';
+import '../../album/screens/album_screen.dart';
 
 /// Home Screen
 class HomeScreen extends StatelessWidget {
@@ -29,10 +33,7 @@ class HomeView extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: Text(
-          'Good Evening',
-          style: AppTextStyles.headlineMedium,
-        ),
+        title: Text('Good Evening', style: AppTextStyles.headlineMedium),
         backgroundColor: AppColors.background,
         elevation: 0,
       ),
@@ -40,9 +41,7 @@ class HomeView extends StatelessWidget {
         builder: (context, state) {
           if (state is HomeLoading) {
             return const Center(
-              child: CircularProgressIndicator(
-                color: AppColors.primary,
-              ),
+              child: CircularProgressIndicator(color: AppColors.primary),
             );
           }
 
@@ -67,16 +66,9 @@ class HomeView extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.error_outline,
-              size: 64,
-              color: AppColors.error,
-            ),
+            const Icon(Icons.error_outline, size: 64, color: AppColors.error),
             const SizedBox(height: 16),
-            Text(
-              'Something went wrong',
-              style: AppTextStyles.titleLarge,
-            ),
+            Text('Something went wrong', style: AppTextStyles.titleLarge),
             const SizedBox(height: 8),
             Text(
               message,
@@ -118,29 +110,61 @@ class HomeView extends StatelessWidget {
             // Quick Picks Section
             QuickPicksSection(
               tracks: state.quickPicks,
-              onTrackTap: (track) {
-                // TODO: Navigate to track player
-              },
+              onTrackTap:
+                  (track) => _playTrack(
+                    context,
+                    tracks: state.quickPicks,
+                    track: track,
+                    playingFrom: 'Quick picks',
+                  ),
             ),
             const SizedBox(height: 24),
             // Random Picks Section
             RandomPicksSection(
               tracks: state.randomPicks,
-              onTrackTap: (track) {
-                // TODO: Navigate to track player
-              },
+              onTrackTap:
+                  (track) => _playTrack(
+                    context,
+                    tracks: state.randomPicks,
+                    track: track,
+                    playingFrom: 'Random picks',
+                  ),
             ),
             const SizedBox(height: 24),
             // New Albums Section
             NewAlbumsSection(
               albums: state.newAlbums,
               onAlbumTap: (album) {
-                // TODO: Navigate to album detail
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AlbumScreen(albumId: album.id),
+                  ),
+                );
               },
             ),
             const SizedBox(height: 100), // Bottom padding for navigation bar
           ],
         ),
+      ),
+    );
+  }
+
+  void _playTrack(
+    BuildContext context, {
+    required List<TrackModel> tracks,
+    required TrackModel track,
+    required String playingFrom,
+  }) {
+    // Find index of clicked track
+    final index = tracks.indexWhere((t) => t.id == track.id);
+
+    // Load playlist and start playing
+    context.read<PlayerBloc>().add(
+      LoadPlaylist(
+        tracks: tracks,
+        playingFrom: playingFrom,
+        initialIndex: index >= 0 ? index : 0,
       ),
     );
   }
