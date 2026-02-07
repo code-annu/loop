@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'app.dart';
+import 'core/services/audio_player_service.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
+  // Initialize audio service for background playback
+  await AudioPlayerService.init();
+
   // Set preferred orientations
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
