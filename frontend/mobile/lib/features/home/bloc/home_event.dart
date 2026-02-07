@@ -8,7 +8,7 @@ abstract class HomeEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-/// Fetch all home data (quick picks, random picks, new albums)
+/// Fetch all home data (triggers individual fetches)
 class FetchHomeData extends HomeEvent {
   const FetchHomeData();
 }
@@ -26,4 +26,9 @@ class FetchRandomPicks extends HomeEvent {
 /// Fetch only new albums section
 class FetchNewAlbums extends HomeEvent {
   const FetchNewAlbums();
+}
+
+/// Fetch tracks section
+class FetchTracks extends HomeEvent {
+  const FetchTracks();
 }

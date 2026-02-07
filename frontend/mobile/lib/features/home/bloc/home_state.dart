@@ -1,58 +1,70 @@
 import 'package:equatable/equatable.dart';
 import '../../../data/models/models.dart';
 
-/// Home Bloc States
-abstract class HomeState extends Equatable {
-  const HomeState();
+enum HomeSectionStatus { initial, loading, loaded, error }
 
-  @override
-  List<Object?> get props => [];
-}
-
-/// Initial state
-class HomeInitial extends HomeState {
-  const HomeInitial();
-}
-
-/// Loading state
-class HomeLoading extends HomeState {
-  const HomeLoading();
-}
-
-/// Loaded state with all data
-class HomeLoaded extends HomeState {
+/// Home Bloc State
+class HomeState extends Equatable {
+  final HomeSectionStatus quickPicksStatus;
   final List<TrackModel> quickPicks;
+
+  final HomeSectionStatus randomPicksStatus;
   final List<TrackModel> randomPicks;
+
+  final HomeSectionStatus newAlbumsStatus;
   final List<AlbumModel> newAlbums;
 
-  const HomeLoaded({
+  final HomeSectionStatus tracksStatus;
+  final List<TrackModel> tracks;
+
+  final String? errorMessage;
+
+  const HomeState({
+    this.quickPicksStatus = HomeSectionStatus.initial,
     this.quickPicks = const [],
+    this.randomPicksStatus = HomeSectionStatus.initial,
     this.randomPicks = const [],
+    this.newAlbumsStatus = HomeSectionStatus.initial,
     this.newAlbums = const [],
+    this.tracksStatus = HomeSectionStatus.initial,
+    this.tracks = const [],
+    this.errorMessage,
   });
 
-  @override
-  List<Object?> get props => [quickPicks, randomPicks, newAlbums];
-
-  HomeLoaded copyWith({
+  HomeState copyWith({
+    HomeSectionStatus? quickPicksStatus,
     List<TrackModel>? quickPicks,
+    HomeSectionStatus? randomPicksStatus,
     List<TrackModel>? randomPicks,
+    HomeSectionStatus? newAlbumsStatus,
     List<AlbumModel>? newAlbums,
+    HomeSectionStatus? tracksStatus,
+    List<TrackModel>? tracks,
+    String? errorMessage,
   }) {
-    return HomeLoaded(
+    return HomeState(
+      quickPicksStatus: quickPicksStatus ?? this.quickPicksStatus,
       quickPicks: quickPicks ?? this.quickPicks,
+      randomPicksStatus: randomPicksStatus ?? this.randomPicksStatus,
       randomPicks: randomPicks ?? this.randomPicks,
+      newAlbumsStatus: newAlbumsStatus ?? this.newAlbumsStatus,
       newAlbums: newAlbums ?? this.newAlbums,
+      tracksStatus: tracksStatus ?? this.tracksStatus,
+      tracks: tracks ?? this.tracks,
+      errorMessage: errorMessage ?? this.errorMessage,
     );
   }
-}
-
-/// Error state
-class HomeError extends HomeState {
-  final String message;
-
-  const HomeError(this.message);
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [
+    quickPicksStatus,
+    quickPicks,
+    randomPicksStatus,
+    randomPicks,
+    newAlbumsStatus,
+    newAlbums,
+    tracksStatus,
+    tracks,
+    errorMessage,
+  ];
 }
